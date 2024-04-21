@@ -17,7 +17,7 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     TuiRootModule,
     NgLetModule,
-    LeafletModule,
+    LeafletModule
   ],
   providers: [],
   bootstrap: [AppComponent]
