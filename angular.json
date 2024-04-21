@@ -35,6 +35,9 @@
             ],
             "styles": [
               "src/styles.scss",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+              "./node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
               "./node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": []

@@ -28,9 +28,11 @@
     "@taiga-ui/icons": "^3.75.0",
     "@taiga-ui/kit": "^3.75.0",
     "@types/google.maps": "^3.52.3",
+    "bootstrap": "^5.2.3",
     "leaflet": "^1.9.3",
     "leaflet-geosearch": "^3.7.0",
     "ng-let": "^15.0.2",
+    "normalize.css": "^8.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
