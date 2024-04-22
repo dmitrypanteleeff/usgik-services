@@ -1,8 +1,12 @@
 <div>
   <div id="map"
     leaflet
+    leafletDraw
     (leafletMapReady)="onMapReady($event)"
     [leafletOptions]="mapOptions"
-    [leafletLayersControl]="layersControl">
+    [leafletDrawOptions]="drawOptions"
+    [leafletLayersControl]="layersControl"
+    (leafletDrawCreated)="onDrawCreated($event)">
+
   </div>
 </div>
