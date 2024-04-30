@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import * as MapConfig from 'src/app/pages/offers/containers/map-offers/map-offers.config';
-import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import { DrawEvents, FeatureGroup } from 'leaflet';
 
 @Component({
@@ -14,7 +15,7 @@ export class MapOffersComponent implements OnInit {
 
   map!: L.Map;
   mapOptions!: L.MapOptions;
-  provider: any;
+  shown: boolean = false;
 
   layersControl = {
     baseLayers: {
@@ -22,14 +23,14 @@ export class MapOffersComponent implements OnInit {
       'Спутник': MapConfig.OFFERS_HYBRID_MAP
     },
     overlays: {
-      // 'Vehicle': this.vehicleMarker
+      //'Vehicle': MapConfig.OFFERS_OPEN_STREET_MAP
     }
   };
 
   drawnItems: FeatureGroup = L.featureGroup();
 
   drawOptions: L.Control.DrawConstructorOptions = {
-    position: 'bottomleft',
+    position: 'topleft',
     edit: {
       featureGroup: this.drawnItems
     },
@@ -40,7 +41,17 @@ export class MapOffersComponent implements OnInit {
       circle: false,
       rectangle: false,
       polygon: {
-        showArea: true
+        showArea: true,
+        precision: { km: 0 },
+        shapeOptions: {
+                   // color: '#d4af37'
+          stroke: true,
+          color: '#3388ff',
+          weight: 4,
+          opacity: 0.5,
+          fill: true,
+          clickable: true
+        }
       }
     }
     // draw: {
@@ -67,6 +78,8 @@ export class MapOffersComponent implements OnInit {
     //     },
   };
 
+  constructor(private _http: HttpClient) { }
+
   // constructor(
 
   // ) {
@@ -80,8 +93,8 @@ export class MapOffersComponent implements OnInit {
 
   private initializeMapOptions() {
     this.mapOptions = {
-      center: L.latLng(51.505, 14.01),
-      zoom: 12,
+      center: L.latLng(46.705, -1.51),
+      zoom: 10,
       layers: [
         MapConfig.OFFERS_OPEN_STREET_MAP
       ]
@@ -91,17 +104,29 @@ export class MapOffersComponent implements OnInit {
   onMapReady(map: L.Map) {
     this.map = map;
     this.map.setMaxBounds([[-90, -180], [90, 180]]);
-    // const provider = new BingProvider({
-    //   params: {
-    //     key: environment.bingApiKey,
-    //   },
-    // });
     const provider = new OpenStreetMapProvider;
-    this.map.zoomControl.remove();
-    this.provider = provider;
+    const searchControl = GeoSearchControl({
+      provider,
+      style: 'bar',
+      autoCompleteDelay: 300,
+      showMarker: false,
+      searchLabel: 'Поиск',
+    });
+    this.map.addControl(searchControl);
+
+    this._http.get('assets/export_draw_30_04_2024.json').subscribe((json: any) => {
+      console.log(json);
+      // this.json = json;
+      L.geoJSON(json).addTo(map);
+    });
+    // this._http.get('../../mocks/export_draw_30_04_2024.geojson').subscribe((json: any) => {
+    //   // console.log(json);
+    //   // this.json = json;
+    //   L.geoJSON(json).addTo(map);
+    // });
   }
 
-  public onDrawCreated(e: any) {
+  onDrawCreated(e: any) {
     this.drawnItems.addLayer((e as DrawEvents.Created).layer);
   }
 

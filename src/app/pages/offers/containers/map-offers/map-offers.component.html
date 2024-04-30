@@ -1,12 +1,16 @@
+<button (click)="shown = !shown">Show/Hide Control</button>
 <div>
   <div id="map"
     leaflet
-    leafletDraw
-    (leafletMapReady)="onMapReady($event)"
     [leafletOptions]="mapOptions"
-    [leafletDrawOptions]="drawOptions"
     [leafletLayersControl]="layersControl"
-    (leafletDrawCreated)="onDrawCreated($event)">
-
+    (leafletMapReady)="onMapReady($event)">
+    <ng-container *ngIf="shown">
+      <div leafletDraw
+	      [leafletDrawOptions]="drawOptions"
+        (leafletDrawCreated)="onDrawCreated($event)">
+        <div [leafletLayer]="drawnItems"></div>
+      </div>
+    </ng-container>
   </div>
 </div>

@@ -52,7 +52,8 @@
         <ng-container *ngFor="let item of items">
           <button type="button"
             tuiOption
-            [value]="item.id">
+            [value]="item.id"
+            (click)="chooseOffer(item)">
               {{ item.name }}
           </button>
         </ng-container>

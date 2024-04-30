@@ -61,4 +61,8 @@ export class ChooseOfferComponent {
 
     return ({$implicit}: TuiContextWithImplicit<number>) => map.get($implicit) || '';
   }
+
+  chooseOffer(item: any) {
+    console.log(11111, 'chooseOffer', item.name)
+  }
 }
