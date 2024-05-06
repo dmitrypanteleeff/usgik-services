@@ -1,15 +1,25 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  Self
+} from '@angular/core';
 import * as L from 'leaflet';
 import * as MapConfig from 'src/app/pages/offers/containers/map-offers/map-offers.config';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import { DrawEvents, FeatureGroup } from 'leaflet';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { OffersAction } from '../../state/offers.action';
+import { TuiDestroyService } from '@taiga-ui/cdk';
+import { Observable, takeUntil, delay } from 'rxjs';
 
 @Component({
   selector: 'usgik-map-offers',
   templateUrl: './map-offers.component.html',
   styleUrls: ['./map-offers.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TuiDestroyService],
 })
 export class MapOffersComponent implements OnInit {
 
@@ -78,16 +88,27 @@ export class MapOffersComponent implements OnInit {
     //     },
   };
 
-  constructor(private _http: HttpClient) { }
-
-  // constructor(
-
-  // ) {
-  //   super();
-  // }
+  constructor(
+    @Self()
+    @Inject(TuiDestroyService)
+    private readonly destroy$: TuiDestroyService,
+    private readonly _actions: Actions,
+    private readonly _store: Store,
+  ) { }
 
   ngOnInit() {
     this.initializeMapOptions()
+    this.initSubscription();
+  }
+
+  private initSubscription() {
+    this._actions
+      .pipe(
+        ofActionSuccessful(OffersAction.LoadFeatureCollectionSuccess),
+        delay(1000),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(json => L.geoJSON(json.payload).addTo(this.map));
   }
 
 
@@ -114,20 +135,10 @@ export class MapOffersComponent implements OnInit {
     });
     this.map.addControl(searchControl);
 
-    this._http.get('assets/export_draw_30_04_2024.json').subscribe((json: any) => {
-      console.log(json);
-      // this.json = json;
-      L.geoJSON(json).addTo(map);
-    });
-    // this._http.get('../../mocks/export_draw_30_04_2024.geojson').subscribe((json: any) => {
-    //   // console.log(json);
-    //   // this.json = json;
-    //   L.geoJSON(json).addTo(map);
-    // });
+    this._store.dispatch(new OffersAction.LoadFeatureCollection);
   }
 
   onDrawCreated(e: any) {
     this.drawnItems.addLayer((e as DrawEvents.Created).layer);
   }
-
 }

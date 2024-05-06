@@ -5,6 +5,9 @@ import { TuiRootModule } from '@taiga-ui/core';
 import { NgLetModule } from 'ng-let';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NgxsModule } from '@ngxs/store';
+import { OfferState } from './pages/offers/state/offers.state';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,7 +18,11 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     TuiRootModule,
-    NgLetModule
+    NgLetModule,
+    HttpClientModule,
+    NgxsModule.forRoot([OfferState], {
+      developmentMode: false
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
