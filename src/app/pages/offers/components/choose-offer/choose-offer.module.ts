@@ -5,6 +5,7 @@ import { TuiDataListModule, TuiLoaderModule, TuiTextfieldControllerModule } from
 import { TuiSelectModule, TuiSelectOptionModule } from '@taiga-ui/kit';
 import { FormsModule } from '@angular/forms';
 import { TuiLetModule, TuiPortalModule } from '@taiga-ui/cdk';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 
 
@@ -22,7 +23,10 @@ import { TuiLetModule, TuiPortalModule } from '@taiga-ui/cdk';
     TuiSelectOptionModule,
     TuiLoaderModule,
     TuiLetModule,
-    TuiPortalModule
+    TuiPortalModule,
+    TuiSelectModule,
+    NgxSkeletonLoaderModule,
+    TuiSelectModule
   ]
 })
 export class ChooseOfferModule { }

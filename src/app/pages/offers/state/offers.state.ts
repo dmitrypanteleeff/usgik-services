@@ -1,30 +1,51 @@
 import { Injectable, NgModule } from '@angular/core';
-import { Action, NgxsModule, NgxsOnInit, State, StateContext } from '@ngxs/store';
+import { Action,
+  NgxsModule,
+   NgxsOnInit,
+  Selector,
+  State,
+  StateContext
+} from '@ngxs/store';
 import { OfferStep } from '../models/offers-step.type';
 //import { OptionsModel } from '../types/options.interface';
 import { OffersAction } from './offers.action';
 import { OffersApiService } from '../services/offers-api.service';
-import { catchError, tap } from 'rxjs';
+import { catchError, delay, tap } from 'rxjs';
 //import { CityModel } from '../types/cities.interface';
 
 export interface OfferStateModel {
   step: OfferStep,
-  loadFeatureCollection: boolean
+  loadFeatureCollection: boolean,
+  orderList: unknown[]
 }
 
 @State<OfferStateModel>({
   name: 'offer',
   defaults: {
     step: 'offers',
-    loadFeatureCollection: false
+    loadFeatureCollection: false,
+    orderList: []
   }
 })
 
 @Injectable()
 export class OfferState {
 
-  constructor(private readonly _api: OffersApiService) {
+  constructor(private readonly _api: OffersApiService) {}
 
+  @Selector()
+  static step$(state: OfferStateModel): OfferStep {
+    return state.step;
+  }
+
+  @Selector()
+  static loadFeatureCollection$(state: OfferStateModel): boolean {
+    return state.loadFeatureCollection;
+  }
+
+  @Selector()
+  static orderList$(state: OfferStateModel): any[] {
+    return state.orderList;
   }
 
   @Action(OffersAction.LoadFeatureCollection)
@@ -48,33 +69,37 @@ export class OfferState {
     ctx.patchState({
       loadFeatureCollection: false
     })
-    ctx.dispatch(new OffersAction.Error(payload))
+    ctx.dispatch(new OffersAction.Error(payload));
   }
 
-  // @Action(ResetGameAction)
-  // ResetGameAction(ctx: StateContext<GameStateModel>, action: ResetGameAction) {
-  //   const { name } = action;
-  //   if (!name) { return; }
+  @Action(OffersAction.LoadOffersList)
+  LoadOffersList(ctx: StateContext<OfferStateModel>) {
+    return this._api.LoadOffersList()
+      .pipe(
+        delay(2000),
+        tap((res) => ctx.dispatch(new OffersAction.LoadOffersListSuccess(res)) ),
+        catchError(error => ctx.dispatch(new OffersAction.LoadFeatureCollectionError(error))))
+  }
 
-  //   const state = ctx.getState();
+  @Action(OffersAction.LoadOffersListSuccess)
+  LoadOffersListSuccess(ctx: StateContext<OfferStateModel>, { payload }: OffersAction.LoadOffersListSuccess) {
+    let data = payload as any;
+    console.log(11111, data.data)
+    ctx.patchState({
+      orderList: data.data
+    })
+  }
 
-  //   console.log(222222, name)
+  @Action(OffersAction.LoadOffersListError)
+  LoadOffersListError(ctx: StateContext<OfferStateModel>, { payload }: OffersAction.LoadOffersListError) {
+    ctx.patchState({
+      orderList: []
+    })
+    ctx.dispatch(new OffersAction.Error(payload));
+  }
 
-  //   ctx.setState({
-  //     ...state,
-  //     options: {
-  //       ...state.options,
-  //       score: 0
-  //     }
-  //   })
-
-  //   console.log(state.options)
-  // }
-
+  @Action(OffersAction.Error)
+  Error(ctx: StateContext<OfferStateModel>, { payload }: OffersAction.Error) {
+    console.log('Error')
+  }
 }
-
-// @NgModule({
-//   imports: [NgxsModule.forFeature([OfferState])]
-// })
-// export class OfferStateModule {
-// }

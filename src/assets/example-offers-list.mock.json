@@ -1,0 +1,156 @@
+{
+  "data": [
+    {
+      "id": 42,
+      "order": "Медвежья услуга 1",
+      "params": [
+        {
+          "type": "geometry",
+          "title": "Территория",
+          "description": "Выберите полигон внутри которого нужны контрольные точки",
+          "restrictions": {
+            "type": "polygon",
+            "mustBeInside": true,
+            "count": 1,
+            "default": null
+          }
+        },
+        {
+          "type": "checkbox",
+          "title": "Высота",
+          "description": "Укажите, если для точек нужна высота",
+          "restrictions": {
+            "value": "Высота",
+            "default": true
+          }
+        },
+        {
+          "type": "number",
+          "title": "Количество точек",
+          "description": "Укажите, сколько точек внутри полигона вам нужно",
+          "restrictions": {
+            "type": "int",
+            "min": 1,
+            "max": 1000,
+            "step": 1,
+            "default": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "order": "Хорошая Услуга 2",
+      "params": [
+        {
+          "type": "geometry",
+          "title": "Территория",
+          "description": "Выберите полигон внутри которого нужны контрольные точки",
+          "restrictions": {
+            "type": "polygon",
+            "mustBeInside": true,
+            "count": 1,
+            "default": null
+          }
+        },
+        {
+          "type": "checkbox",
+          "title": "Высота",
+          "description": "Укажите, если для точек нужна высота",
+          "restrictions": {
+            "value": "Высота",
+            "default": true
+          }
+        },
+        {
+          "type": "number",
+          "title": "Количество точек",
+          "description": "Укажите, сколько точек внутри полигона вам нужно",
+          "restrictions": {
+            "type": "int",
+            "min": 1,
+            "max": 1000,
+            "step": 1,
+            "default": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": 345,
+      "order": "Услуга из списка 3",
+      "params": [
+        {
+          "type": "geometry",
+          "title": "Территория",
+          "description": "Выберите полигон внутри которого нужны контрольные точки",
+          "restrictions": {
+            "type": "polygon",
+            "mustBeInside": true,
+            "count": 1,
+            "default": null
+          }
+        },
+        {
+          "type": "checkbox",
+          "title": "Высота",
+          "description": "Укажите, если для точек нужна высота",
+          "restrictions": {
+            "value": "Высота",
+            "default": true
+          }
+        },
+        {
+          "type": "number",
+          "title": "Количество точек",
+          "description": "Укажите, сколько точек внутри полигона вам нужно",
+          "restrictions": {
+            "type": "int",
+            "min": 1,
+            "max": 1000,
+            "step": 1,
+            "default": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "order": "У данной услуги такой номер 4",
+      "params": [
+        {
+          "type": "geometry",
+          "title": "Территория",
+          "description": "Выберите полигон внутри которого нужны контрольные точки",
+          "restrictions": {
+            "type": "polygon",
+            "mustBeInside": true,
+            "count": 1,
+            "default": null
+          }
+        },
+        {
+          "type": "checkbox",
+          "title": "Высота",
+          "description": "Укажите, если для точек нужна высота",
+          "restrictions": {
+            "value": "Высота",
+            "default": true
+          }
+        },
+        {
+          "type": "number",
+          "title": "Количество точек",
+          "description": "Укажите, сколько точек внутри полигона вам нужно",
+          "restrictions": {
+            "type": "int",
+            "min": 1,
+            "max": 1000,
+            "step": 1,
+            "default": 3
+          }
+        }
+      ]
+    }
+  ]
+}

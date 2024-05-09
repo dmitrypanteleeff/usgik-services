@@ -11,8 +11,12 @@ export class OffersApiService {
     private readonly _http: HttpClient
 ) {}
 
-LoadFeatureCollection(): Observable<any> {
-  return this._http.get('assets/export_draw_30_04_2024.json');
-}
+  LoadFeatureCollection(): Observable<any> {
+    return this._http.get('assets/export_draw_30_04_2024.json');
+  }
+
+  LoadOffersList(): Observable<any> {
+    return this._http.get('assets/example-offers-list.mock.json');
+  }
 
 }

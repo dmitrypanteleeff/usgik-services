@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NgxsModule } from '@ngxs/store';
 import { OfferState } from './pages/offers/state/offers.state';
 import { HttpClientModule } from '@angular/common/http';
+import { TuiSelectModule } from '@taiga-ui/kit';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
     TuiRootModule,
     NgLetModule,
     HttpClientModule,
+    TuiSelectModule,
     NgxsModule.forRoot([OfferState], {
       developmentMode: false
     }),

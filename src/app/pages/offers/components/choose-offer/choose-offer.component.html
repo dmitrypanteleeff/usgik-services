@@ -41,27 +41,39 @@
       </tui-data-list>
     </tui-select> -->
 
-  <tui-select
-    *tuiLet="items$ | async as items"
-    class="b-form"
-    [tuiTextfieldLabelOutside]="true"
-    [valueContent]="items ? stringify(items) : loading"
-    [(ngModel)]="value">
-    <ng-template tuiDataList>
-      <tui-data-list *ngIf="items; else loading">
-        <ng-container *ngFor="let item of items">
-          <button type="button"
-            tuiOption
-            [value]="item.id"
-            (click)="chooseOffer(item)">
-              {{ item.name }}
-          </button>
-        </ng-container>
-      </tui-data-list>
-    </ng-template>
+  <ng-container *ngIf="loading$ | async; else skeletonTempl">
+    <tui-select
+      *tuiLet="orderList$ | async as items"
+      class="b-form"
+      [tuiTextfieldLabelOutside]="true"
+      [valueContent]="items ? stringify(items) : loading"
+      [(ngModel)]="value">
 
-    <ng-template #loading>
-        <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
-    </ng-template>
-</tui-select>
+      <ng-template tuiDataList>
+        <tui-data-list *ngIf="items; else loading">
+          <ng-container *ngFor="let item of items">
+            <button type="button"
+              tuiOption
+              [value]="item.id"
+              (click)="chooseOffer(item)">
+                {{ item.order }}
+            </button>
+          </ng-container>
+        </tui-data-list>
+      </ng-template>
+
+      <ng-template #loading>
+          <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
+      </ng-template>
+    </tui-select>
+  </ng-container>
+
+    <!-- <span [tuiSkeleton]="true">Loading..</span> -->
+
+
+  <ng-template #skeletonTempl>
+    <ngx-skeleton-loader animation="progress"
+      [theme]="{'height.px': 56}">
+    </ngx-skeleton-loader>
+  </ng-template>
 </div>

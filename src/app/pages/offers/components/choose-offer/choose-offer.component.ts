@@ -1,6 +1,28 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TuiContextWithImplicit, TuiStringHandler, tuiPure } from '@taiga-ui/cdk';
-import { delay, of } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  Self
+} from '@angular/core';
+import { Actions, Select, Store } from '@ngxs/store';
+import {
+  TuiContextWithImplicit,
+  TuiDestroyService,
+  TuiStringHandler,
+  tuiPure
+} from '@taiga-ui/cdk';
+import {
+  Observable,
+  combineLatest,
+  delay,
+  filter,
+  map,
+  of,
+  tap
+} from 'rxjs';
+import { OffersAction } from '../../state/offers.action';
+import { OfferState } from '../../state/offers.state';
 
 interface Python {
   readonly id: number;
@@ -21,9 +43,44 @@ const ITEMS: readonly Python[] = [
   selector: 'usgik-choose-offer',
   templateUrl: './choose-offer.component.html',
   styleUrls: ['./choose-offer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TuiDestroyService],
 })
-export class ChooseOfferComponent {
+export class ChooseOfferComponent implements OnInit {
+
+  @Select(OfferState.orderList$) orderList$!: Observable<any[]>;
+
+  constructor(
+    @Self()
+    @Inject(TuiDestroyService)
+    private readonly destroy$: TuiDestroyService,
+    private readonly _actions: Actions,
+    private readonly _store: Store,
+  ) { }
+
+  loading$!: Observable<boolean>;
+
+
+  ngOnInit(): void {
+    this.initSubscription();
+    this._store.dispatch(new OffersAction.LoadOffersList);
+  }
+
+  private initSubscription() {
+    this.loading$ = combineLatest([
+      this.orderList$.pipe(filter(Boolean))
+    ])
+      .pipe(tap(val => console.log('tap', typeof val)),map(item => !!item && item[0].length > 0));
+
+    // this._actions
+    //   .pipe(
+    //     ofActionSuccessful(OffersAction.LoadFeatureCollectionSuccess),
+    //     delay(1000),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe(json => L.geoJSON(json.payload).addTo(this.map));
+  }
+
   groups: {items: { title: string}[], label: string }[] = [
     {
       items: [{ title: 'Заг 1'},{ title: 'Заг 2'}],
@@ -55,14 +112,14 @@ export class ChooseOfferComponent {
   readonly items$ = of(ITEMS).pipe(delay(1000));
 
   @tuiPure
-  stringify(items: readonly Python[]): TuiStringHandler<TuiContextWithImplicit<number>> {
-    const map = new Map(items.map(({id, name}) => [id, name] as [number, string]));
+  stringify(items: readonly any[]): TuiStringHandler<TuiContextWithImplicit<number>> {
+    const map = new Map(items.map(({id, order}) => [id, order] as [number, string]));
     console.log(1111, map)
 
     return ({$implicit}: TuiContextWithImplicit<number>) => map.get($implicit) || '';
   }
 
   chooseOffer(item: any) {
-    console.log(11111, 'chooseOffer', item.name)
+    console.log(11111, 'chooseOffer', item.offer)
   }
 }
